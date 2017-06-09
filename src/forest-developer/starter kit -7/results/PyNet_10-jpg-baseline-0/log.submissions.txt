@@ -1,0 +1,19 @@
+
+--- [START 2017-05-25 23:21:12] ----------------------------------------------------------------
+
+
+** dataset setting **
+	(height,width)    = (112, 112)
+	in_channels       = 3
+	test_dataset.split = test-61191
+	test_dataset.num  = 61191
+	batch_size        = 128
+
+** net setting **
+	model_file = /root/share/project/pytorch/results/kaggle-forest/PyNet_10-jpg-baseline-0/snap/final.torch
+
+** predict @ agument = default **
+** predict @ agument = left-right **
+** predict @ agument = up-down **
+** predict @ agument = rotate **
+

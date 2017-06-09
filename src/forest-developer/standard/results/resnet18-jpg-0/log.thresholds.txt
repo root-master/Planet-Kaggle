@@ -1,0 +1,148 @@
+
+--- [START 2017-05-27 23:18:37] ----------------------------------------------------------------
+<error! i forget to call crop center 224x224. the results below are for 256x256>
+
+	** dataset setting **
+		(height,width)     = (256, 256)
+		in_channels        = 3
+		test_dataset.split = train-40479
+		test_dataset.num   = 40479
+		batch_size         = 128
+
+	** net setting **
+		model_file = /root/share/project/pytorch/results/kaggle-forest/resnet18-jpg-0/snap/final.torch
+
+	** predict @ agument = default **
+			test_loss=0.085963, test_acc=0.926695
+
+	** predict @ agument = left-right **
+			test_loss=0.087587, test_acc=0.924906
+
+	** predict @ agument = up-down **
+			test_loss=0.087862, test_acc=0.924605
+
+	** predict @ agument = transpose **
+			test_loss=0.087819, test_acc=0.924625
+
+	** predict @ agument = rotate90 **
+<force terminate>
+
+
+
+
+
+--- [START 2017-05-27 23:36:02] ----------------------------------------------------------------
+
+
+** dataset setting **
+	(height,width)     = (256, 256)
+	in_channels        = 3
+	test_dataset.split = train-40479
+	test_dataset.num   = 40479
+	batch_size         = 128
+
+** net setting **
+	model_file = /root/share/project/pytorch/results/kaggle-forest/resnet18-jpg-0/snap/final.torch
+
+** predict @ agument = default **
+		test_loss=0.083705, test_acc=0.928833
+
+** predict @ agument = left-right **
+		test_loss=0.086329, test_acc=0.926466
+
+** predict @ agument = up-down **
+		test_loss=0.086370, test_acc=0.926347
+
+** predict @ agument = transpose **
+		test_loss=0.086473, test_acc=0.926264
+
+** predict @ agument = rotate90 **
+		test_loss=0.086272, test_acc=0.926193
+
+** predict @ agument = rotate180 **
+		test_loss=0.086329, test_acc=0.926466
+
+** predict @ agument = rotate270 **
+		test_loss=0.083534, test_acc=0.928811
+
+
+** thresholding @ test_dir = /root/share/project/pytorch/results/kaggle-forest/resnet18-jpg-0/thresholds/default **
+	method1:
+	best_threshold=0.200000, best_score=0.929799
+
+	method2:
+	best_threshold
+[0.22, 0.17, 0.3, 0.11, 0.27, 0.21, 0.19, 0.21, 0.19, 0.22, 0.1, 0.11, 0.16, 0.13, 0.14, 0.16, 0.03]
+	best_scores
+[0.92968986456607849, 0.92981365101911917, 0.92975404497450709, 0.93016778021456314, 0.92979345523128298, 0.92968843251755884, 0.92979482878198816, 0.92968843251755884, 0.92969124125154845, 0.92971183994069784, 0.92968843251755884, 0.92979015327313774, 0.92975036904558761, 0.92972612088758844, 0.92979933174021667, 0.92976973048189004, 0.92969185865685389]
+
+** thresholding @ test_dir = /root/share/project/pytorch/results/kaggle-forest/resnet18-jpg-0/thresholds/left-right **
+	method1:
+	best_threshold=0.210000, best_score=0.927009
+
+	method2:
+	best_threshold
+[0.22, 0.18, 0.24, 0.12, 0.24, 0.21, 0.18, 0.18, 0.19, 0.23, 0.1, 0.11, 0.13, 0.12, 0.15, 0.17, 0.03]
+	best_scores
+[0.92701393654831099, 0.92711169450831943, 0.92704423998140073, 0.92747829411674532, 0.92709882800379262, 0.92700923510267386, 0.92707240154046477, 0.92704429078513007, 0.92704852689472672, 0.9270791632715798, 0.92700923510267386, 0.92708935657983227, 0.92706154706412525, 0.92705859810987401, 0.92708101818259347, 0.92706832747497581, 0.92701064937915512]
+
+** thresholding @ test_dir = /root/share/project/pytorch/results/kaggle-forest/resnet18-jpg-0/thresholds/up-down **
+	method1:
+	best_threshold=0.190000, best_score=0.927141
+
+	method2:
+	best_threshold
+[0.21, 0.17, 0.23, 0.1, 0.29, 0.2, 0.18, 0.2, 0.18, 0.21, 0.1, 0.11, 0.13, 0.17, 0.16, 0.12, 0.03]
+	best_scores
+[0.92698261829690076, 0.92700246471130776, 0.92699665742037751, 0.92735532066033621, 0.92699658951949837, 0.92701787830115379, 0.92709121192243049, 0.92699275631731359, 0.92703464150055681, 0.92698261829690076, 0.92698261829690076, 0.92706247753537863, 0.9270097211221251, 0.92702580661110123, 0.92708193965614061, 0.92707005403658427, 0.92698294750653731]
+
+** thresholding @ test_dir = /root/share/project/pytorch/results/kaggle-forest/resnet18-jpg-0/thresholds/transpose **
+	method1:
+	best_threshold=0.185000, best_score=0.926845
+
+	method2:
+	best_threshold
+[0.18, 0.21, 0.22, 0.12, 0.28, 0.23, 0.21, 0.19, 0.2, 0.24, 0.1, 0.1, 0.18, 0.11, 0.15, 0.16, 0.05]
+	best_scores
+[0.92682696690397492, 0.92676434583985323, 0.92676990413031801, 0.92732953301817334, 0.92680762514721349, 0.92676513692244811, 0.92676434583985323, 0.92683091739292589, 0.92677647203200053, 0.92679818919197299, 0.92676434583985323, 0.92685261719257106, 0.92678168541826933, 0.92680333703245477, 0.92684584644623325, 0.92684232867584782, 0.92676434583985323]
+
+** thresholding @ test_dir = /root/share/project/pytorch/results/kaggle-forest/resnet18-jpg-0/thresholds/rotate90 **
+	method1:
+	best_threshold=0.185000, best_score=0.927161
+
+	method2:
+	best_threshold
+[0.17, 0.18, 0.16, 0.1, 0.22, 0.23, 0.19, 0.19, 0.18, 0.22, 0.09, 0.12, 0.15, 0.14, 0.14, 0.14, 0.03]
+	best_scores
+[0.92690476767912433, 0.92697600884027098, 0.92691893756133181, 0.92745660137093955, 0.92693997424599517, 0.92691663424027737, 0.9269509758666592, 0.92692803775606158, 0.92692376123967513, 0.92691419543102105, 0.92689026290153831, 0.92699196820087459, 0.92696907772314829, 0.92693257928391248, 0.92696654768598608, 0.92694885021278861, 0.92689664819651973]
+
+** thresholding @ test_dir = /root/share/project/pytorch/results/kaggle-forest/resnet18-jpg-0/thresholds/rotate180 **
+	method1:
+	best_threshold=0.210000, best_score=0.927009
+
+	method2:
+	best_threshold
+[0.22, 0.18, 0.24, 0.12, 0.24, 0.21, 0.18, 0.18, 0.19, 0.23, 0.1, 0.11, 0.13, 0.12, 0.15, 0.17, 0.03]
+	best_scores
+[0.92701393654831099, 0.92711169450831943, 0.92704423998140073, 0.92747829411674532, 0.92709882800379262, 0.92700923510267386, 0.92707240154046477, 0.92704429078513007, 0.92704852689472672, 0.9270791632715798, 0.92700923510267386, 0.92708935657983227, 0.92706154706412525, 0.92705859810987401, 0.92708101818259347, 0.92706832747497581, 0.92701064937915512]
+
+** thresholding @ test_dir = /root/share/project/pytorch/results/kaggle-forest/resnet18-jpg-0/thresholds/rotate270 **
+	method1:
+	best_threshold=0.195000, best_score=0.929984
+
+	method2:
+	best_threshold
+[0.2, 0.19, 0.21, 0.08, 0.3, 0.21, 0.2, 0.2, 0.21, 0.26, 0.1, 0.1, 0.19, 0.14, 0.17, 0.16, 0.03]
+	best_scores
+[0.92976413925054768, 0.92979076166142971, 0.92972643041658654, 0.93010437829401094, 0.92981113338122945, 0.92972643041658654, 0.92978861582063999, 0.92973605859072106, 0.92972643041658654, 0.92980465319318462, 0.92972643041658654, 0.92981303367124168, 0.92981330164789755, 0.92976321252633121, 0.92978156258547318, 0.92978882206631552, 0.92972789492816144]
+
+** thresholding @ test_dir = /root/share/project/pytorch/results/kaggle-forest/resnet18-jpg-0/thresholds/average **
+	method1:
+	best_threshold=0.185000, best_score=0.928851
+
+	method2:
+	best_threshold
+[0.23, 0.17, 0.21, 0.13, 0.22, 0.23, 0.19, 0.19, 0.2, 0.26, 0.09, 0.11, 0.15, 0.13, 0.15, 0.14, 0.03]
+	best_scores
+[0.92883473742083877, 0.92884782752586359, 0.92879547515256522, 0.92924003626187812, 0.92884858151420568, 0.92883584544201725, 0.92879550036101022, 0.92887943750905699, 0.9288406959495461, 0.9288551505263023, 0.92879547515256522, 0.928896931625944, 0.92882935791176646, 0.92885512547991478, 0.92888723930491823, 0.92890658601168608, 0.92880123835885298]
+

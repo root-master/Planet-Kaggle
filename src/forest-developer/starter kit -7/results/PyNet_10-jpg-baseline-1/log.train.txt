@@ -1,0 +1,260 @@
+
+--- [START 2017-05-25 18:58:46] ----------------------------------------------------------------
+
+** some experiment setting **
+	SEED    = 123
+	file    = /root/share/project/pytorch/build/forest-7/train-forest-1.py
+	out_dir = /root/share/project/pytorch/results/kaggle-forest/PyNet_10-jpg-baseline-1
+
+** dataset setting **
+	(height,width)    = (112, 112)
+	in_channels       = 3
+	train_dataset.num = 40479
+	test_dataset.num  = 8000
+	batch_size        = 96
+	train_loader.sampler = <torch.utils.data.sampler.RandomSampler object at 0x7f1bbe65ca90>
+	test_loader.sampler  = <torch.utils.data.sampler.SequentialSampler object at 0x7f1bbe46d940>
+
+** net setting **
+<class 'net.model.pyramidnet.PyNet_10'>
+
+    def __init__(self, in_shape, num_classes):
+        super(PyNet_10, self).__init__()
+        in_channels, height, width = in_shape
+
+        self.preprocess = nn.Sequential(
+            *make_conv_bn_relu(in_channels, 16, kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu(16, 16, kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu(16, 16, kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu(16, 16, kernel_size=1, stride=1, padding=0 ),
+        ) # 128
+
+        self.conv1d = nn.Sequential(
+            *make_conv_bn_relu(16,32, kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu(32,32, kernel_size=3, stride=1, padding=1 ),
+            *make_conv_bn_relu(32,64, kernel_size=1, stride=1, padding=0 ),
+        ) # 128
+        self.shortld = nn.Conv2d(16, 64, kernel_size=1, stride=1, padding=0, bias=False)
+
+
+        self.conv2d = nn.Sequential(
+            *make_conv_bn_relu(64,64,  kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu(64,64,  kernel_size=3, stride=1, padding=1 ),
+            *make_conv_bn_relu(64,128, kernel_size=1, stride=1, padding=0 ),
+        ) # 64
+        self.short2d = nn.Conv2d(64, 128, kernel_size=1, stride=1, padding=0, bias=False)
+
+        self.conv3d = nn.Sequential(
+            *make_conv_bn_relu(128,128, kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu(128,128, kernel_size=3, stride=1, padding=1, groups=16 ),
+            *make_conv_bn_relu(128,256, kernel_size=1, stride=1, padding=0 ),
+        ) # 32
+        self.short3d = nn.Conv2d(128, 256, kernel_size=1, stride=1, padding=0, bias=False)
+
+        self.conv4d = nn.Sequential(
+            *make_conv_bn_relu(256,256, kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu(256,256, kernel_size=3, stride=1, padding=1, groups=16 ),
+            *make_conv_bn_relu(256,256, kernel_size=1, stride=1, padding=0 ),
+        ) # 16
+        self.short4d = None #nn.Identity()
+
+        self.conv5d = nn.Sequential(
+            *make_conv_bn_relu(256,256, kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu(256,256, kernel_size=3, stride=1, padding=1, groups=16 ),
+            *make_conv_bn_relu(256,256, kernel_size=1, stride=1, padding=0 ),
+        ) # 8
+        self.short5d = None #  nn.Identity()
+
+
+        self.conv4u = nn.Sequential(
+            *make_conv_bn_relu(256,256, kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu(256,256, kernel_size=3, stride=1, padding=1, groups=16 ),
+            *make_conv_bn_relu(256,256, kernel_size=1, stride=1, padding=0 ),
+        ) # 16
+
+        self.conv3u = nn.Sequential(
+            *make_conv_bn_relu(256,128, kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu(128,128, kernel_size=3, stride=1, padding=1, groups=16 ),
+            *make_conv_bn_relu(128,128, kernel_size=1, stride=1, padding=0 ),
+        ) # 32
+
+        self.conv2u = nn.Sequential(
+            *make_conv_bn_relu(128,64, kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu( 64,64, kernel_size=3, stride=1, padding=1 ),
+            *make_conv_bn_relu( 64,64, kernel_size=1, stride=1, padding=0 ),
+        ) # 64
+
+        self.conv1u = nn.Sequential(
+            *make_conv_bn_relu(64,64, kernel_size=1, stride=1, padding=0 ),
+            *make_conv_bn_relu(64,64, kernel_size=3, stride=1, padding=1 ),
+            *make_conv_bn_relu(64,64, kernel_size=1, stride=1, padding=0 ),
+        ) # 128
+
+
+
+
+        self.cls2d = nn.Sequential(
+            *make_linear_bn_relu(128, 512),
+            *make_linear_bn_relu(512, 512),
+            nn.Linear(512, num_classes)
+        )
+        self.cls3d = nn.Sequential(
+            *make_linear_bn_relu(256, 512),
+            *make_linear_bn_relu(512, 512),
+            nn.Linear(512, num_classes)
+        )
+        self.cls4d = nn.Sequential(
+            *make_linear_bn_relu(256, 512),
+            *make_linear_bn_relu(512, 512),
+            nn.Linear(512, num_classes)
+        )
+        self.cls5d = nn.Sequential(
+            *make_linear_bn_relu(256, 512),
+            *make_linear_bn_relu(512, 512),
+            nn.Linear(512, num_classes)
+        )
+
+        self.cls1u = nn.Sequential(
+            *make_linear_bn_relu(64,  512),
+            *make_linear_bn_relu(512, 512),
+            nn.Linear(512, num_classes)
+        )
+        self.cls2u = nn.Sequential(
+            *make_linear_bn_relu( 64, 512),
+            *make_linear_bn_relu(512, 512),
+            nn.Linear(512, num_classes)
+        )
+        self.cls3u = nn.Sequential(
+            *make_linear_bn_relu(128, 512),
+            *make_linear_bn_relu(512, 512),
+            nn.Linear(512, num_classes)
+        )
+        self.cls4u = nn.Sequential(
+            *make_linear_bn_relu(256, 512),
+            *make_linear_bn_relu(512, 512),
+            nn.Linear(512, num_classes)
+        )
+
+    def forward(self, x):
+
+        out    = self.preprocess(x)                                       #128
+
+        conv1d = self.conv1d(out)                                         #128
+        out    = F.max_pool2d(conv1d, kernel_size=2, stride=2)  # 64
+
+        conv2d = self.conv2d(out) + make_shortcut(out, self.short2d)      # 64
+        out    = F.max_pool2d(conv2d, kernel_size=2, stride=2) # 32
+        flat2d = make_max_flat(out)
+
+        conv3d = self.conv3d(out) + make_shortcut(out, self.short3d)      # 32
+        out    = F.max_pool2d(conv3d, kernel_size=2, stride=2) # 16
+        flat3d = make_max_flat(out)
+
+        conv4d = self.conv4d(out) + make_shortcut(out, self.short4d)      # 16
+        out    = F.max_pool2d(conv4d, kernel_size=2, stride=2) #  8
+        flat4d = make_max_flat(out)
+
+        conv5d = self.conv5d(out) + make_shortcut(out, self.short5d)      #  8
+        out    = conv5d                                        #  4
+        flat5d = make_max_flat(out)
+
+        out    = F.upsample_bilinear(out,scale_factor=2)      # 16
+        out    = out + conv4d
+        out    = self.conv4u(out)
+        flat4u = make_max_flat(out)
+
+        out    = F.upsample_bilinear(out,scale_factor=2)      # 32
+        out    = out + conv3d
+        out    = self.conv3u(out)
+        flat3u = make_max_flat(out)
+
+        out    = F.upsample_bilinear(out,scale_factor=2)      # 64
+        out    = out + conv2d
+        out    = self.conv2u(out)
+        flat2u = make_max_flat(out)
+
+        out    = F.upsample_bilinear(out,scale_factor=2)      #128
+        out    = out + conv1d
+        out    = self.conv1u(out)
+        flat1u = make_max_flat(out)
+
+
+
+        logit2d = self.cls2d(flat2d).unsqueeze(2)
+        logit3d = self.cls3d(flat3d).unsqueeze(2)
+        logit4d = self.cls4d(flat4d).unsqueeze(2)
+        logit5d = self.cls5d(flat5d).unsqueeze(2)
+
+        logit1u = self.cls1u(flat1u).unsqueeze(2)
+        logit2u = self.cls2u(flat2u).unsqueeze(2)
+        logit3u = self.cls3u(flat3u).unsqueeze(2)
+        logit4u = self.cls4u(flat4u).unsqueeze(2)
+
+
+        logit = torch.cat((
+                    logit2d,logit3d,logit4d,logit5d,
+            logit1u,logit2u,logit3u,logit4u,
+        ),dim=2)
+
+        logit = F.dropout(logit, p=0.15,training=self.training)
+        logit = logit.sum(2)
+        logit = logit.view(logit.size(0),logit.size(1)) #unsqueeze(2)
+        prob  = F.sigmoid(logit)
+
+        return logit,prob
+
+
+** start training here! **
+ optimizer=<torch.optim.sgd.SGD object at 0x7f1bd6d0aba8>
+ epoch   iter   rate  |  smooth_loss   |  train_loss  (acc)  |  valid_loss  (acc)  | min
+----------------------------------------------------------------------------------------
+  1.0     421    0.1000   |  0.146  | 0.145  0.860 | 0.139  0.868  |  3.3 min 
+  2.0     421    0.1000   |  0.130  | 0.120  0.906 | 0.126  0.882  |  3.4 min 
+  3.0     421    0.1000   |  0.125  | 0.103  0.908 | 0.139  0.866  |  3.4 min 
+  4.0     421    0.1000   |  0.118  | 0.108  0.910 | 0.115  0.894  |  3.4 min 
+  5.0     421    0.1000   |  0.117  | 0.147  0.863 | 0.120  0.895  |  3.4 min 
+  6.0     421    0.1000   |  0.116  | 0.109  0.888 | 0.149  0.843  |  3.4 min 
+  7.0     421    0.1000   |  0.115  | 0.131  0.890 | 0.186  0.810  |  3.4 min 
+  8.0     421    0.1000   |  0.117  | 0.137  0.872 | 0.135  0.870  |  3.4 min 
+  9.0     421    0.1000   |  0.111  | 0.111  0.894 | 0.120  0.892  |  3.4 min 
+ 10.0     421    0.1000   |  0.114  | 0.106  0.905 | 0.127  0.875  |  3.4 min 
+ 11.0     421    0.0100   |  0.099  | 0.092  0.933 | 0.093  0.919  |  3.4 min 
+ 12.0     421    0.0100   |  0.107  | 0.099  0.912 | 0.093  0.920  |  3.4 min 
+ 13.0     421    0.0100   |  0.098  | 0.095  0.927 | 0.092  0.921  |  3.4 min 
+ 14.0     421    0.0100   |  0.101  | 0.087  0.938 | 0.092  0.921  |  3.4 min 
+ 15.0     421    0.0100   |  0.099  | 0.102  0.925 | 0.090  0.922  |  3.4 min 
+ 16.0     421    0.0100   |  0.097  | 0.118  0.887 | 0.089  0.922  |  3.4 min 
+ 17.0     421    0.0100   |  0.098  | 0.105  0.899 | 0.095  0.916  |  3.4 min 
+ 18.0     421    0.0100   |  0.096  | 0.079  0.932 | 0.090  0.923  |  3.4 min 
+ 19.0     421    0.0100   |  0.093  | 0.106  0.915 | 0.095  0.917  |  3.4 min 
+ 20.0     421    0.0100   |  0.096  | 0.121  0.903 | 0.088  0.924  |  3.4 min 
+ 21.0     421    0.0100   |  0.094  | 0.076  0.934 | 0.092  0.918  |  3.4 min 
+ 22.0     421    0.0100   |  0.097  | 0.078  0.929 | 0.090  0.923  |  3.4 min 
+ 23.0     421    0.0100   |  0.099  | 0.106  0.890 | 0.095  0.917  |  3.3 min 
+ 24.0     421    0.0100   |  0.096  | 0.109  0.908 | 0.088  0.924  |  3.4 min 
+ 25.0     421    0.0100   |  0.096  | 0.098  0.914 | 0.092  0.918  |  3.4 min 
+ 26.0     421    0.0050   |  0.096  | 0.099  0.929 | 0.086  0.926  |  3.4 min 
+ 27.0     421    0.0050   |  0.095  | 0.086  0.927 | 0.085  0.927  |  3.3 min 
+ 28.0     421    0.0050   |  0.094  | 0.082  0.926 | 0.086  0.926  |  3.4 min 
+ 29.0     421    0.0050   |  0.092  | 0.098  0.919 | 0.086  0.926  |  3.4 min 
+ 30.0     421    0.0050   |  0.095  | 0.089  0.930 | 0.085  0.928  |  3.4 min 
+ 31.0     421    0.0050   |  0.097  | 0.096  0.908 | 0.084  0.927  |  3.4 min 
+ 32.0     421    0.0050   |  0.090  | 0.107  0.909 | 0.085  0.926  |  3.4 min 
+ 33.0     421    0.0050   |  0.090  | 0.105  0.908 | 0.084  0.929  |  3.4 min 
+ 34.0     421    0.0050   |  0.094  | 0.089  0.931 | 0.085  0.927  |  3.4 min 
+ 35.0     421    0.0050   |  0.090  | 0.110  0.915 | 0.084  0.926  |  3.3 min 
+ 36.0     421    0.0010   |  0.093  | 0.104  0.928 | 0.082  0.931  |  3.3 min 
+ 37.0     421    0.0010   |  0.087  | 0.083  0.928 | 0.081  0.932  |  3.4 min 
+ 38.0     421    0.0010   |  0.091  | 0.122  0.889 | 0.081  0.930  |  3.3 min 
+ 39.0     421    0.0010   |  0.093  | 0.074  0.937 | 0.081  0.932  |  3.3 min 
+ 40.0     421    0.0010   |  0.093  | 0.095  0.902 | 0.081  0.931  |  3.3 min 
+ 41.0     421    0.0001   |  0.093  | 0.086  0.928 | 0.080  0.932  |  3.3 min 
+ 42.0     421    0.0001   |  0.086  | 0.081  0.926 | 0.080  0.932  |  3.3 min 
+ 43.0     421    0.0001   |  0.092  | 0.087  0.919 | 0.080  0.932  |  3.3 min 
+ 44.0     421    0.0001   |  0.091  | 0.067  0.951 | 0.080  0.933  |  3.3 min 
+ 45.0     421    0.0001   |  0.088  | 0.084  0.946 | 0.080  0.933  |  3.3 min 
+ 46.0     421    0.0001   |  0.089  | 0.093  0.921 | 0.080  0.933  |  3.3 min 
+
+/root/share/project/pytorch/results/kaggle-forest/PyNet_10-jpg-baseline-1/snap/final.torch:
+	all time to train=163.4 min
+	test_loss=0.079874, test_acc=0.933170
