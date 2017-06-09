@@ -17,8 +17,3 @@ tar xf "train-jpg.tar"
 
 7za x "train-jpg.tar.7z"
 tar "train-jpg.tar"
-
-rm *.tar.7z
-rm *.tar
-
-
